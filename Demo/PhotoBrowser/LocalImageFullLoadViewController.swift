@@ -46,33 +46,17 @@ final class LocalImageFullLoadViewController: BaseCollectionViewController {
             }
             return image ?? UIImage()
         }
-        // 是否用动画
+        // 创建图片浏览器
+        let browser = PhotoBrowser(originPageIndex: indexPath.item)
+        browser.browserMode = PhotoBrowserLocalImageMode(localImages: images)
         if isSWitchOn {
-            // .scale动画，需要设置 delegate 以获取缩略图
-            let browser = PhotoBrowser(animationType: .scale,
-                                       delegate: self,
-                                       originPageIndex: indexPath.item)
-            browser.localImages = images
-            browser.show(from: self)
-        } else {
-            // .fade动画，不需要设置 delegate
-            let browser = PhotoBrowser(animationType: .fade,
-                                       originPageIndex: indexPath.item)
-            browser.localImages = images
-            browser.show(from: self)
+            // 使用缩放型动画
+            browser.animationType = .scale(relatedViewAndHidden: { index -> (UIView?, Bool) in
+                let view = collectionView.cellForItem(at: IndexPath(item: index, section: 0))
+                return (view, true)
+            })
         }
-    }
-}
-
-extension LocalImageFullLoadViewController: PhotoBrowserDelegate {
-    /// 缩略图所在 view
-    func photoBrowser(_ photoBrowser: PhotoBrowser, thumbnailViewForIndex index: Int) -> UIView? {
-        return collectionView?.cellForItem(at: IndexPath(item: index, section: 0))
-    }
-    
-    /// 缩略图图片，在加载完成之前用作 placeholder 显示
-    /// 返回 nil 直接显示本地图片
-    func photoBrowser(_ photoBrowser: PhotoBrowser, thumbnailImageForIndex index: Int) -> UIImage? {
-        return nil
+        // 显示
+        browser.show(from: self)
     }
 }

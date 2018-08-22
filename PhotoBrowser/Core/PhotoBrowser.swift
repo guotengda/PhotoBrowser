@@ -17,9 +17,6 @@ open class PhotoBrowser: UIViewController {
     /// 实现了PhotoBrowserDelegate协议的对象
     open weak var photoBrowserDelegate: PhotoBrowserDelegate?
 
-    /// 图片加载器
-    open var photoLoader: PhotoLoader
-
     /// 左右两张图之间的间隙
     open var photoSpacing: CGFloat = 30
 
@@ -32,15 +29,11 @@ open class PhotoBrowser: UIViewController {
     /// 双击放大图片时的目标比例
     open var imageZoomScaleForDoubleTap: CGFloat = 2.0
 
-    /// 转场动画类型
-    open var animationType: AnimationType = .scale
+    /// 转场动画类型。默认为透明渐变动画`.fade`
+    open var animationType: PhotoBrowserAnimationType = .fade
 
     /// 打开时的初始页码，第一页为 0.
     open var originPageIndex: Int = 0
-
-    /// 本地图片组
-    /// 优先级高于代理方法`func photoBrowser(_:, localImageForIndex:) -> UIImage?`
-    open var localImages: [UIImage]?
 
     /// 插件组
     open var plugins: [PhotoBrowserPlugin] = []
@@ -50,6 +43,9 @@ open class PhotoBrowser: UIViewController {
     open lazy var cellPlugins: [PhotoBrowserCellPlugin] = {
         return [ProgressViewPlugin(), RawImageButtonPlugin()]
     }()
+    
+    /// 浏览模式
+    open var browserMode: PhotoBrowserMode?
 
     //
     // MARK: - Private Properties
@@ -58,18 +54,18 @@ open class PhotoBrowser: UIViewController {
     /// 当前显示的图片序号，从0开始
     private var currentIndex = 0 {
         didSet {
-            if animationType == .scale {
-                scalePresentationController?.updateCurrentHiddenView(relatedView)
+            switch animationType {
+            case .scale(let closure):
+                let (relatedView, hide) = closure(currentIndex)
+                let view = hide ? relatedView : nil
+                scalePresentationController?.updateCurrentHiddenView(view)
+            default:
+                break
             }
             plugins.forEach {
                 $0.photoBrowser(self, didChangedPageIndex: currentIndex)
             }
         }
-    }
-
-    /// 当前正在显示视图的前一个页面关联视图
-    private var relatedView: UIView? {
-        return photoBrowserDelegate?.photoBrowser(self, thumbnailViewForIndex: currentIndex)
     }
 
     /// 转场协调器
@@ -118,25 +114,11 @@ open class PhotoBrowser: UIViewController {
     #endif
 
     /// 初始化
-    /// - parameter animationType: 转场动画类型，默认为缩放动画`scale`
-    /// - parameter delegate: 浏览器协议代理
-    /// - parameter photoLoader: 网络图片加载器，传 nil 则使用 KingfisherPhotoLoader
     /// - parameter originPageIndex: 打开时的初始页码，第一页为 0.
-    public init(animationType: AnimationType = .scale,
-                delegate: PhotoBrowserDelegate? = nil,
-                photoLoader: PhotoLoader? = nil,
-                originPageIndex: Int = 0) {
-        self.photoLoader = photoLoader ?? {
-            let cls = NSClassFromString("KingfisherPhotoLoader")
-            assert(cls != nil, "请传入你实现的 photoLoader 或在 Podfile 中添加 PhotoBrowser/Kingfisher")
-            return (cls as! NSObject.Type).init() as! PhotoLoader
-            }()
+    public init(originPageIndex: Int = 0) {
         super.init(nibName: nil, bundle: nil)
         self.transitioningDelegate = self
         self.modalPresentationStyle = .custom
-
-        self.animationType = animationType
-        self.photoBrowserDelegate = delegate
         self.originPageIndex = originPageIndex
     }
 
@@ -227,7 +209,6 @@ open class PhotoBrowser: UIViewController {
     //
 
     /// 展示图片浏览器
-    /// - parameter presentingVC: 由谁 present 出图片浏览器
     /// - parameter presentingVC: 由谁 present 出图片浏览器
     open func show(from viewController: UIViewController? = TopMostViewControllerGetter.topMost,
                    wrapped: UINavigationController? = nil) {
@@ -330,10 +311,12 @@ open class PhotoBrowser: UIViewController {
 
 extension PhotoBrowser: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if let mode = browserMode {
+            return mode.numberOfItems()
+        }
+        
         var number = 0
-        if let localCount = localImages?.count {
-            number = localCount
-        } else if let dlgNumber = photoBrowserDelegate?.numberOfPhotos(in: self) {
+        if let dlgNumber = photoBrowserDelegate?.numberOfPhotos(in: self) {
             number = dlgNumber
         }
         plugins.forEach {
@@ -344,34 +327,17 @@ extension PhotoBrowser: UICollectionViewDataSource {
 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(PhotoBrowserCell.self, for: indexPath)
-        cell.imageView.contentMode = imageScaleMode
         cell.cellDelegate = self
-        cell.photoLoader = photoLoader
-        cell.imageMaximumZoomScale = imageMaximumZoomScale
-        cell.imageZoomScaleForDoubleTap = imageZoomScaleForDoubleTap
+        if let mode = browserMode {
+            cell.imageMaximumZoomScale = mode.imageMaximumZoomScale
+            cell.imageZoomScaleForDoubleTap = mode.imageZoomScaleForDoubleTap
+            mode.configure(cell: cell, at: indexPath.item)
+            return cell
+        }
         cellPlugins.forEach {
             $0.photoBrowserCellDidReused(cell, at: indexPath.item)
         }
-        if let local = localImage(for: indexPath.item) {
-            cell.setImage(local, highQualityUrl: nil, rawUrl: nil)
-        } else {
-            let (image, highQualityUrl, rawUrl) = imageFor(index: indexPath.item)
-            cell.setImage(image, highQualityUrl: highQualityUrl, rawUrl: rawUrl)
-        }
         return cell
-    }
-
-    /// 尝试取本地图片
-    private func localImage(for index: Int) -> UIImage? {
-        guard let images = localImages, index < images.count else {
-            return localImageFromDelegate(for: index)
-        }
-        return images[index]
-    }
-    
-    /// 通过代理取本地图片
-    private func localImageFromDelegate(for index: Int) -> UIImage? {
-        return photoBrowserDelegate?.photoBrowser(self, localImageForIndex: index)
     }
 
     private func imageFor(index: Int) -> (UIImage?, highQualityUrl: URL?, rawUrl: URL?) {
@@ -439,63 +405,53 @@ extension PhotoBrowser: UIViewControllerTransitioningDelegate {
         collectionView.layoutIfNeeded()
         // 枚举动画类型
         switch animationType {
-        case .scale, .scaleNoHiding:
-            return makeScalePresentationAnimator(indexPath: indexPath)
         case .fade:
             return FadeAnimator()
+        case .scale(let closure):
+            let cell = collectionView.cellForItem(at: indexPath) as? PhotoBrowserCell
+            let imageView = UIImageView(image: cell?.imageView.image)
+            imageView.contentMode = imageScaleMode
+            imageView.clipsToBounds = true
+            // 创建animator
+            let (view, _) = closure(currentIndex)
+            return ScaleAnimator(startView: view, endView: cell?.imageView, scaleView: imageView)
         }
     }
 
     /// 提供退场动画
     public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         switch animationType {
-        case .scale, .scaleNoHiding:
-            return makeDismissedAnimator()
         case .fade:
             return FadeAnimator()
+        case .scale(let closure):
+            guard let cell = collectionView.visibleCells.first as? PhotoBrowserCell else {
+                return nil
+            }
+            let imageView = UIImageView(image: cell.imageView.image)
+            imageView.contentMode = imageScaleMode
+            imageView.clipsToBounds = true
+            let (view, _) = closure(currentIndex)
+            return ScaleAnimator(startView: cell.imageView, endView: view, scaleView: imageView)
         }
     }
 
     /// 提供转场协调器
     public func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         switch animationType {
-        case .scale:
-            let controller = ScalePresentationController(presentedViewController: presented, presenting: presenting)
-            controller.currentHiddenView = relatedView
-            fadePresentationController = controller
-            scalePresentationController = controller
-            return controller
-        case .scaleNoHiding:
-            let controller = ScalePresentationController(presentedViewController: presented, presenting: presenting)
-            fadePresentationController = controller
-            scalePresentationController = controller
-            return controller
         case .fade:
             let controller = FadePresentationController(presentedViewController: presented, presenting: presented)
             fadePresentationController = controller
             return controller
+        case .scale(let closure):
+            let controller = ScalePresentationController(presentedViewController: presented, presenting: presenting)
+            let (view, hide) = closure(currentIndex)
+            if hide {
+                controller.updateCurrentHiddenView(view)
+            }
+            fadePresentationController = controller
+            scalePresentationController = controller
+            return controller
         }
-    }
-
-    /// 创建缩放型进场动画
-    private func makeScalePresentationAnimator(indexPath: IndexPath) -> UIViewControllerAnimatedTransitioning {
-        let cell = collectionView.cellForItem(at: indexPath) as? PhotoBrowserCell
-        let imageView = UIImageView(image: cell?.imageView.image)
-        imageView.contentMode = imageScaleMode
-        imageView.clipsToBounds = true
-        // 创建animator
-        return ScaleAnimator(startView: relatedView, endView: cell?.imageView, scaleView: imageView)
-    }
-
-    /// 创建缩放型退场动画
-    private func makeDismissedAnimator() -> UIViewControllerAnimatedTransitioning? {
-        guard let cell = collectionView.visibleCells.first as? PhotoBrowserCell else {
-            return nil
-        }
-        let imageView = UIImageView(image: cell.imageView.image)
-        imageView.contentMode = imageScaleMode
-        imageView.clipsToBounds = true
-        return ScaleAnimator(startView: cell.imageView, endView: relatedView, scaleView: imageView)
     }
 }
 

@@ -41,13 +41,13 @@ final class LongPressViewController: BaseCollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: false)
         // 创建图片浏览器
-        let browser = PhotoBrowser(animationType: .scale, delegate: self, originPageIndex: indexPath.item)
-        // 光点型页码指示器
-        browser.plugins = [DefaultPageControlPlugin()]
-        // 只选用加载进度指示器
-        browser.cellPlugins = [ProgressViewPlugin()]
-        // 显示
-        browser.show(from: self)
+//        let browser = PhotoBrowser(animationType: .scale, delegate: self, originPageIndex: indexPath.item)
+//        // 光点型页码指示器
+//        browser.plugins = [DefaultPageControlPlugin()]
+//        // 只选用加载进度指示器
+//        browser.cellPlugins = [ProgressViewPlugin()]
+//        // 显示
+//        browser.show(from: self)
     }
 }
 

@@ -45,6 +45,7 @@ final class CellPluginViewController: BaseCollectionViewController {
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: false)
+        /*
         // 创建图片浏览器
         let browser = PhotoBrowser(animationType: .scale, delegate: self, originPageIndex: indexPath.item)
         // 数字型页码指示器
@@ -63,7 +64,7 @@ final class CellPluginViewController: BaseCollectionViewController {
         }
         browser.cellPlugins.append(overlayPlugin)
         // 显示
-        browser.show(from: self)
+        browser.show(from: self)*/
     }
 }
 
