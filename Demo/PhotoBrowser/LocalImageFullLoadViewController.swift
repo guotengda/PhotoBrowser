@@ -48,11 +48,18 @@ final class LocalImageFullLoadViewController: BaseCollectionViewController {
         }
         // 是否用动画
         if isSWitchOn {
-            // .scale 动画，需要设置 delegate 以获取缩略图
-            PhotoBrowser.show(localImages: images, animationType: .scale, delegate: self, originPageIndex: indexPath.item, fromViewController: self)
+            // .scale动画，需要设置 delegate 以获取缩略图
+            let browser = PhotoBrowser(animationType: .scale,
+                                       delegate: self,
+                                       originPageIndex: indexPath.item)
+            browser.localImages = images
+            browser.show(from: self)
         } else {
-            // 不需要设置 delegate
-            PhotoBrowser.show(localImages: images, originPageIndex: indexPath.item)
+            // .fade动画，不需要设置 delegate
+            let browser = PhotoBrowser(animationType: .fade,
+                                       originPageIndex: indexPath.item)
+            browser.localImages = images
+            browser.show(from: self)
         }
     }
 }

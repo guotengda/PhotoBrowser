@@ -248,59 +248,6 @@ open class PhotoBrowser: UIViewController {
         dismiss(animated: animated, completion: nil)
     }
 
-    /// 展示，传入完整参数
-    /// - parameter animationType: 转场动画类型，默认为缩放动画`scale`
-    /// - parameter delegate: 浏览器协议代理
-    /// - parameter photoLoader: 网络图片加载器，传 nil 则使用 KingfisherPhotoLoader
-    /// - parameter plugins: 插件组，默认加载一个光点型页码指示器
-    /// - parameter originPageIndex: 打开时的初始页码，第一页为 0.
-    /// - parameter fromViewController: 基于哪个 ViewController 执行 present。默认视图顶层VC。
-    /// - returns:  所创建的图片浏览器
-    @discardableResult
-    open class func show(animationType: AnimationType = .scale,
-                         delegate: PhotoBrowserDelegate,
-                         photoLoader: PhotoLoader? = nil,
-                         plugins: [PhotoBrowserPlugin] = [DefaultPageControlPlugin()],
-                         originPageIndex: Int,
-                         fromViewController: UIViewController? = TopMostViewControllerGetter.topMost
-        ) -> PhotoBrowser {
-        let vc = PhotoBrowser(animationType: animationType,
-                              delegate: delegate,
-                              photoLoader: photoLoader,
-                              originPageIndex: originPageIndex)
-        vc.plugins = plugins
-        vc.show(from: fromViewController)
-        return vc
-    }
-
-    /// 展示本地图片
-    /// - parameter localImages: 本地图片组
-    /// - parameter animationType: 转场动画类型，默认为缩放动画`fade`
-    /// - parameter delegate: 浏览器协议代理
-    /// - parameter photoLoader: 图片加载器，传 nil 则使用 KingfisherPhotoLoader
-    /// - parameter plugins: 插件组，默认加载一个光点型页码指示器
-    /// - parameter originPageIndex: 打开时的初始页码，第一页为 0.
-    /// - parameter fromViewController: 基于哪个 ViewController 执行 present。默认视图顶层VC。
-    /// - returns:  所创建的图片浏览器
-    @discardableResult
-    open class func show(localImages: [UIImage],
-                         animationType: AnimationType = .fade,
-                         delegate: PhotoBrowserDelegate? = nil,
-                         photoLoader: PhotoLoader? = nil,
-                         plugins: [PhotoBrowserPlugin] = [DefaultPageControlPlugin()],
-                         originPageIndex: Int,
-                         fromViewController: UIViewController? = TopMostViewControllerGetter.topMost
-        ) -> PhotoBrowser {
-        let vc = PhotoBrowser(animationType: animationType,
-                              delegate: delegate,
-                              photoLoader: photoLoader,
-                              originPageIndex: originPageIndex)
-        vc.localImages = localImages
-        vc.plugins = plugins
-        vc.show(from: fromViewController)
-        return vc
-    }
-
     /// 重新加载数据源
     open func reloadData() {
         collectionView.reloadData()

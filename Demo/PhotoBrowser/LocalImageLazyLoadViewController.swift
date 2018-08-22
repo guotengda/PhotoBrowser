@@ -39,8 +39,9 @@ final class LocalImageLazyLoadViewController: BaseCollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: false)
         // 创建图片浏览器
-        let browser = PhotoBrowser(animationType: isSWitchOn ? .scale : .fade, delegate: self, originPageIndex: indexPath.item)
-        // 显示
+        let browser = PhotoBrowser(animationType: isSWitchOn ? .scale : .fade,
+                                   delegate: self,
+                                   originPageIndex: indexPath.item)
         browser.show(from: self)
     }
 }
