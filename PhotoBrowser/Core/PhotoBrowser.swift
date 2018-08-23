@@ -34,6 +34,9 @@ open class PhotoBrowser: UIViewController {
 
     /// 打开时的初始页码，第一页为 0.
     open var originPageIndex: Int = 0
+    
+    /// 是否处于Peek状态
+    open var isPreviewing = false
 
     /// 插件组
     open var plugins: [PhotoBrowserPlugin] = []
@@ -46,6 +49,11 @@ open class PhotoBrowser: UIViewController {
     
     /// 浏览模式
     open var browserMode: PhotoBrowserMode?
+
+    @available(iOS 9.0, *)
+    open override var previewActionItems: [UIPreviewActionItem] {
+        return plugins.map({$0.previewActionItems}).reduce([UIPreviewActionItem](), +)
+    }
 
     //
     // MARK: - Private Properties
