@@ -7,20 +7,28 @@
 
 import Foundation
 
-public struct PhotoBrowserLocalImageMode: PhotoBrowserMode {
+public struct PhotoBrowserLocalImageMode {
     
-    var localImages: [UIImage]
+    var numberOfItemsClosure: () -> Int
     
-    public init(localImages: [UIImage] = []) {
-        self.localImages = localImages
+    var imageAtIndexClosure: (Int) -> UIImage?
+    
+    /// 初始化
+    /// - parameter numberOfItems: 共有多少项
+    /// - parameter imageAtIndex: 每一项的图片对象
+    public init(numberOfItems: @escaping () -> Int, imageAtIndex: @escaping (Int) -> UIImage?) {
+        self.numberOfItemsClosure = numberOfItems
+        self.imageAtIndexClosure = imageAtIndex
     }
-    
+}
+
+extension PhotoBrowserLocalImageMode: PhotoBrowserMode {
     public func numberOfItems() -> Int {
-        return localImages.count
+        return numberOfItemsClosure()
     }
     
     public func configure(cell: PhotoBrowserCell, at index: Int) {
         cell.imageView.contentMode = .scaleAspectFill
-        cell.imageView.image = localImages[index]
+        cell.imageView.image = imageAtIndexClosure(index)
     }
 }

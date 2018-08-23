@@ -11,8 +11,7 @@ import UIKit
 final class HomeViewController: UITableViewController {
     
     var dataSources: [BaseCollectionViewController] = [
-            LocalImageFullLoadViewController(),
-            LocalImageLazyLoadViewController(),
+            LocalImageViewController(),
             NetworkImageViewController(),
             RawImageViewController(),
             LongPressViewController(),

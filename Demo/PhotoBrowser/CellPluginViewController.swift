@@ -47,7 +47,7 @@ final class CellPluginViewController: BaseCollectionViewController {
         collectionView.deselectItem(at: indexPath, animated: false)
         /*
         // 创建图片浏览器
-        let browser = PhotoBrowser(animationType: .scale, delegate: self, originPageIndex: indexPath.item)
+        let browser = PhotoBrowser(animationType: .scale, delegate: self, originIndex: indexPath.item)
         // 数字型页码指示器
         browser.plugins = [NumberPageControlPlugin()]
         // Cell插件，覆盖在Cell之上

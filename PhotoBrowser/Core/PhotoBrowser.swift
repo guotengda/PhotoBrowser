@@ -13,6 +13,9 @@ open class PhotoBrowser: UIViewController {
     //
     // MARK: - Public Properties
     //
+    
+    /// 浏览模式
+    open var mode: PhotoBrowserMode
 
     /// 实现了PhotoBrowserDelegate协议的对象
     open weak var photoBrowserDelegate: PhotoBrowserDelegate?
@@ -33,7 +36,7 @@ open class PhotoBrowser: UIViewController {
     open var animationType: PhotoBrowserAnimationType = .fade
 
     /// 打开时的初始页码，第一页为 0.
-    open var originPageIndex: Int = 0
+    open var originIndex: Int = 0
     
     /// 是否处于Peek状态
     open var isPreviewing = false
@@ -46,9 +49,6 @@ open class PhotoBrowser: UIViewController {
     open lazy var cellPlugins: [PhotoBrowserCellPlugin] = {
         return [ProgressViewPlugin(), RawImageButtonPlugin()]
     }()
-    
-    /// 浏览模式
-    open var browserMode: PhotoBrowserMode?
 
     @available(iOS 9.0, *)
     open override var previewActionItems: [UIPreviewActionItem] {
@@ -122,12 +122,12 @@ open class PhotoBrowser: UIViewController {
     #endif
 
     /// 初始化
-    /// - parameter originPageIndex: 打开时的初始页码，第一页为 0.
-    public init(originPageIndex: Int = 0) {
+    /// - parameter mode: 浏览器模式
+    public init(mode: PhotoBrowserMode) {
+        self.mode = mode
         super.init(nibName: nil, bundle: nil)
         self.transitioningDelegate = self
         self.modalPresentationStyle = .custom
-        self.originPageIndex = originPageIndex
     }
 
     public required init?(coder aDecoder: NSCoder) {
@@ -144,7 +144,7 @@ open class PhotoBrowser: UIViewController {
         plugins.forEach {
             $0.photoBrowser(self, viewDidLoad: view)
         }
-        currentIndex = originPageIndex
+        currentIndex = originIndex
     }
     
     open override func viewWillAppear(_ animated: Bool) {
@@ -218,8 +218,9 @@ open class PhotoBrowser: UIViewController {
 
     /// 展示图片浏览器
     /// - parameter presentingVC: 由谁 present 出图片浏览器
-    open func show(from viewController: UIViewController? = TopMostViewControllerGetter.topMost,
+    open func show(originIndex: Int, from viewController: UIViewController? = TopMostViewControllerGetter.topMost,
                    wrapped: UINavigationController? = nil) {
+        self.originIndex = originIndex
         if let nav = wrapped {
             self.transitioningDelegate = nil
             nav.transitioningDelegate = self
@@ -319,32 +320,15 @@ open class PhotoBrowser: UIViewController {
 
 extension PhotoBrowser: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if let mode = browserMode {
-            return mode.numberOfItems()
-        }
-        
-        var number = 0
-        if let dlgNumber = photoBrowserDelegate?.numberOfPhotos(in: self) {
-            number = dlgNumber
-        }
-        plugins.forEach {
-            $0.photoBrowser(self, numberOfPhotos: number)
-        }
-        return number
+        return mode.numberOfItems()
     }
-
+ 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(PhotoBrowserCell.self, for: indexPath)
         cell.cellDelegate = self
-        if let mode = browserMode {
-            cell.imageMaximumZoomScale = mode.imageMaximumZoomScale
-            cell.imageZoomScaleForDoubleTap = mode.imageZoomScaleForDoubleTap
-            mode.configure(cell: cell, at: indexPath.item)
-            return cell
-        }
-        cellPlugins.forEach {
-            $0.photoBrowserCellDidReused(cell, at: indexPath.item)
-        }
+        cell.imageMaximumZoomScale = mode.imageMaximumZoomScale
+        cell.imageZoomScaleForDoubleTap = mode.imageZoomScaleForDoubleTap
+        mode.configure(cell: cell, at: indexPath.item)
         return cell
     }
 

@@ -86,10 +86,6 @@ class BaseCollectionViewController: UICollectionViewController {
         return []
     }
     
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return dataSource.count
-    }
-    
     override var shouldAutorotate: Bool {
         return true
     }
@@ -103,5 +99,18 @@ class BaseCollectionViewController: UICollectionViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + coordinator.transitionDuration) {
             self.collectionView?.reloadData()
         }
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return dataSource.count
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: false)
+        openPhotoBrowser(with: collectionView, indexPath: indexPath)
+    }
+    
+    func openPhotoBrowser(with collectionView: UICollectionView, indexPath: IndexPath) {
+        // 子类重与
     }
 }
