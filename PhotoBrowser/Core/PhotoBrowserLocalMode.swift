@@ -1,5 +1,5 @@
 //
-//  PhotoBrowserLocalImageMode.swift
+//  PhotoBrowserLocalMode.swift
 //  JXPhotoBrowser
 //
 //  Created by JiongXing on 2018/8/22.
@@ -7,10 +7,12 @@
 
 import Foundation
 
-public struct PhotoBrowserLocalImageMode {
+public struct PhotoBrowserLocalMode {
     
+    /// 共有多少项
     var numberOfItemsClosure: () -> Int
     
+    /// 每一项的图片对象
     var imageAtIndexClosure: (Int) -> UIImage?
     
     /// 初始化
@@ -22,7 +24,8 @@ public struct PhotoBrowserLocalImageMode {
     }
 }
 
-extension PhotoBrowserLocalImageMode: PhotoBrowserMode {
+extension PhotoBrowserLocalMode: PhotoBrowserMode {
+    
     public func numberOfItems() -> Int {
         return numberOfItemsClosure()
     }

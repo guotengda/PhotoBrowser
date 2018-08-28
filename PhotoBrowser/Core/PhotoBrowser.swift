@@ -331,19 +331,6 @@ extension PhotoBrowser: UICollectionViewDataSource {
         mode.configure(cell: cell, at: indexPath.item)
         return cell
     }
-
-    private func imageFor(index: Int) -> (UIImage?, highQualityUrl: URL?, rawUrl: URL?) {
-        guard let delegate = photoBrowserDelegate else {
-            return (nil, nil, nil)
-        }
-        // 缩略图
-        let originImage = delegate.photoBrowser(self, thumbnailImageForIndex: index)
-        // 高清图url
-        let highQualityUrl = delegate.photoBrowser(self, highQualityUrlForIndex: index)
-        // 原图url
-        let rawUrl = delegate.photoBrowser(self, rawUrlForIndex: index)
-        return (originImage, highQualityUrl, rawUrl)
-    }
     
     public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if let pbCell = cell as? PhotoBrowserCell {

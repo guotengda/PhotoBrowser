@@ -131,8 +131,10 @@
 		91CEA6F0BC509403A6487023789E6B17 /* quant_enc.c in Sources */ = {isa = PBXBuildFile; fileRef = 44A0A3B23FF3A53C02D2B3A419736554 /* quant_enc.c */; settings = {COMPILER_FLAGS = "-D_THREAD_SAFE -fno-objc-arc -w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		92F89C31446D2447ABCF221118CD4796 /* libwebp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C37E0258FB6F49A2DA3FAD49B5ACA4D /* libwebp.framework */; };
 		93CECF980C947FD162A4BBFCB125628E /* cost_mips_dsp_r2.c in Sources */ = {isa = PBXBuildFile; fileRef = B0072274CAF047A0056EF557F79C4768 /* cost_mips_dsp_r2.c */; settings = {COMPILER_FLAGS = "-D_THREAD_SAFE -fno-objc-arc -w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		9480A2182135782900F9D48A /* PhotoBrowserNetworkMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9480A2172135782900F9D48A /* PhotoBrowserNetworkMode.swift */; };
+		9480A21A2135824400F9D48A /* PhotoBrowserPageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9480A2192135824400F9D48A /* PhotoBrowserPageCell.swift */; };
 		94B978E4212D493E00C5DD96 /* PhotoBrowserMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B978E3212D493E00C5DD96 /* PhotoBrowserMode.swift */; };
-		94B978EA212D5C4900C5DD96 /* PhotoBrowserLocalImageMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B978E9212D5C4900C5DD96 /* PhotoBrowserLocalImageMode.swift */; };
+		94B978EA212D5C4900C5DD96 /* PhotoBrowserLocalMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B978E9212D5C4900C5DD96 /* PhotoBrowserLocalMode.swift */; };
 		94B978EC212D702500C5DD96 /* PhotoBrowserAnimationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B978EB212D702500C5DD96 /* PhotoBrowserAnimationType.swift */; };
 		95C342B266FE9712AEB16FF9FE0E616E /* WebPProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5C373FCE687890EDF71B716BB1BB16 /* WebPProcessor.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		967D3CD0440E2C229F7EED91DCCAFC85 /* utils.c in Sources */ = {isa = PBXBuildFile; fileRef = EAEA6EBB7337947F048D72999963A7B5 /* utils.c */; settings = {COMPILER_FLAGS = "-D_THREAD_SAFE -fno-objc-arc -w -Xanalyzer -analyzer-disable-all-checks"; }; };
@@ -462,8 +464,10 @@
 		92888FC11732D84C0D7E56C2CB56C3F9 /* ThreadHelper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ThreadHelper.swift; path = Sources/ThreadHelper.swift; sourceTree = "<group>"; };
 		9354A57E5065A5680409CAA61E93FF29 /* alphai_dec.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = alphai_dec.h; path = src/dec/alphai_dec.h; sourceTree = "<group>"; };
 		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9480A2172135782900F9D48A /* PhotoBrowserNetworkMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PhotoBrowserNetworkMode.swift; path = PhotoBrowser/Core/PhotoBrowserNetworkMode.swift; sourceTree = "<group>"; };
+		9480A2192135824400F9D48A /* PhotoBrowserPageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PhotoBrowserPageCell.swift; path = PhotoBrowser/Core/PhotoBrowserPageCell.swift; sourceTree = "<group>"; };
 		94B978E3212D493E00C5DD96 /* PhotoBrowserMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PhotoBrowserMode.swift; path = PhotoBrowser/Core/PhotoBrowserMode.swift; sourceTree = "<group>"; };
-		94B978E9212D5C4900C5DD96 /* PhotoBrowserLocalImageMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PhotoBrowserLocalImageMode.swift; path = PhotoBrowser/Core/PhotoBrowserLocalImageMode.swift; sourceTree = "<group>"; };
+		94B978E9212D5C4900C5DD96 /* PhotoBrowserLocalMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PhotoBrowserLocalMode.swift; path = PhotoBrowser/Core/PhotoBrowserLocalMode.swift; sourceTree = "<group>"; };
 		94B978EB212D702500C5DD96 /* PhotoBrowserAnimationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoBrowserAnimationType.swift; sourceTree = "<group>"; };
 		94E478B8837CCD0D69B28D0423129AF8 /* common_dec.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = common_dec.h; path = src/dec/common_dec.h; sourceTree = "<group>"; };
 		955F2F8094EDBC4C6864A7EB4CF5DB58 /* ImagePrefetcher.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ImagePrefetcher.swift; path = Sources/ImagePrefetcher.swift; sourceTree = "<group>"; };
@@ -732,6 +736,7 @@
 				218E9E8C289F1CF7ADF12D1F52B4EF6A /* NumberPageControlPlugin.swift */,
 				3560044992261D64DA557CF2443249DF /* PhotoBrowser.swift */,
 				4C5B6ABA0E3BE550C11EB48895088D63 /* PhotoBrowserCell.swift */,
+				9480A2192135824400F9D48A /* PhotoBrowserPageCell.swift */,
 				38912755D8B92C9D698F393170D71EB4 /* PhotoBrowserCellPlugin.swift */,
 				238080CE9762D835A681E8D0303C55C9 /* PhotoBrowserDelegate.swift */,
 				B6155405475F8F0FB340650F03F0CE67 /* PhotoBrowserPlugin.swift */,
@@ -744,7 +749,8 @@
 				736AA6A60CD8E71A62F5E37F8CEFAB28 /* ScalePresentationController.swift */,
 				0412B7DD642B77ED76D5684DE51CBF25 /* TopMostViewControllerGetter.swift */,
 				94B978E3212D493E00C5DD96 /* PhotoBrowserMode.swift */,
-				94B978E9212D5C4900C5DD96 /* PhotoBrowserLocalImageMode.swift */,
+				94B978E9212D5C4900C5DD96 /* PhotoBrowserLocalMode.swift */,
+				9480A2172135782900F9D48A /* PhotoBrowserNetworkMode.swift */,
 				94B978EB212D702500C5DD96 /* PhotoBrowserAnimationType.swift */,
 			);
 			name = Core;
@@ -1447,13 +1453,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9480A21A2135824400F9D48A /* PhotoBrowserPageCell.swift in Sources */,
 				38AC69E747F27ABCCA059754926E9931 /* DefaultPageControlPlugin.swift in Sources */,
 				9153E30D11F85E2F7A98B22D948ED515 /* FadeAnimator.swift in Sources */,
 				F32FC2132EDD7F734BD93CB6794A8CA9 /* FadePresentationController.swift in Sources */,
 				94B978EC212D702500C5DD96 /* PhotoBrowserAnimationType.swift in Sources */,
 				90439A2C6B8806DE854E67A43B6143F4 /* JXPhotoBrowser-dummy.m in Sources */,
 				A22D9B68D684591AF0ED5645CA8D3B02 /* KingfisherPhotoLoader.swift in Sources */,
-				94B978EA212D5C4900C5DD96 /* PhotoBrowserLocalImageMode.swift in Sources */,
+				94B978EA212D5C4900C5DD96 /* PhotoBrowserLocalMode.swift in Sources */,
 				FC2063572815F1062A9DA25EDA08032E /* NumberPageControlPlugin.swift in Sources */,
 				3145FD038B3A260EBCD14408CB0B1CF5 /* PhotoBrowser.swift in Sources */,
 				D1AA0379B0BD58E1FEB8D4141A517760 /* PhotoBrowserCell.swift in Sources */,
@@ -1464,6 +1471,7 @@
 				BF2231BCF9A5A706FEB943253CE2BC6C /* PhotoBrowserPresentationController.swift in Sources */,
 				5481E39377DA44A365C66449F9282F26 /* PhotoLoader.swift in Sources */,
 				76F0F6323970D969B08827228F596C60 /* ProgressView.swift in Sources */,
+				9480A2182135782900F9D48A /* PhotoBrowserNetworkMode.swift in Sources */,
 				05F508BEA63414ED75305A464EBE6103 /* ProgressViewPlugin.swift in Sources */,
 				D8734D1861B568D31980F76A0373327E /* RawImageButtonPlugin.swift in Sources */,
 				BD27037972F54B19E37256C067596D98 /* ScaleAnimator.swift in Sources */,

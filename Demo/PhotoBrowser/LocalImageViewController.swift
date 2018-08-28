@@ -38,7 +38,7 @@ final class LocalImageViewController: BaseCollectionViewController {
     
     override func openPhotoBrowser(with collectionView: UICollectionView, indexPath: IndexPath) {
         // 创建浏览模式
-        let mode = PhotoBrowserLocalImageMode(numberOfItems: {
+        let mode = PhotoBrowserLocalMode(numberOfItems: {
             // 共有多少项
             return self.dataSource.count
         }, imageAtIndex: { (index) -> UIImage? in
