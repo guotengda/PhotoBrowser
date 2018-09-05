@@ -11,5 +11,5 @@ public enum PhotoBrowserAnimationType {
     /// 透明渐变
     case fade
     /// 缩放
-    case scale(relatedViewAndHidden: ((_ index: Int) -> (UIView?, Bool)))
+    case zoom(originViewIsHidden: ((_ index: Int) -> (UIView?, Bool)))
 }

@@ -51,7 +51,7 @@ final class LocalImageViewController: BaseCollectionViewController {
         let browser = PhotoBrowser(mode: mode)
         // 使用缩放型动画
         if isSWitchOn {
-            browser.animationType = .scale(relatedViewAndHidden: { index -> (UIView?, Bool) in
+            browser.animationType = .zoom(originViewIsHidden: { index -> (UIView?, Bool) in
                 let view = collectionView.cellForItem(at: indexPath)
                 return (view, true)
             })

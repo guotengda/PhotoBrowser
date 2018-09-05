@@ -63,7 +63,7 @@ open class PhotoBrowser: UIViewController {
     private var currentIndex = 0 {
         didSet {
             switch animationType {
-            case .scale(let closure):
+            case .zoom(let closure):
                 let (relatedView, hide) = closure(currentIndex)
                 let view = hide ? relatedView : nil
                 scalePresentationController?.updateCurrentHiddenView(view)
@@ -386,7 +386,7 @@ extension PhotoBrowser: UIViewControllerTransitioningDelegate {
         switch animationType {
         case .fade:
             return FadeAnimator()
-        case .scale(let closure):
+        case .zoom(let closure):
             let cell = collectionView.cellForItem(at: indexPath) as? PhotoBrowserCell
             let imageView = UIImageView(image: cell?.imageView.image)
             imageView.contentMode = imageScaleMode
@@ -402,7 +402,7 @@ extension PhotoBrowser: UIViewControllerTransitioningDelegate {
         switch animationType {
         case .fade:
             return FadeAnimator()
-        case .scale(let closure):
+        case .zoom(let closure):
             guard let cell = collectionView.visibleCells.first as? PhotoBrowserCell else {
                 return nil
             }
@@ -421,7 +421,7 @@ extension PhotoBrowser: UIViewControllerTransitioningDelegate {
             let controller = FadePresentationController(presentedViewController: presented, presenting: presented)
             fadePresentationController = controller
             return controller
-        case .scale(let closure):
+        case .zoom(let closure):
             let controller = ScalePresentationController(presentedViewController: presented, presenting: presenting)
             let (view, hide) = closure(currentIndex)
             if hide {
