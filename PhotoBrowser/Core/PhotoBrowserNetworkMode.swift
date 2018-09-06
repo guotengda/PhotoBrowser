@@ -30,7 +30,7 @@ public struct PhotoBrowserNetworkMode {
     }
 }
 
-extension PhotoBrowserNetworkMode: PhotoBrowserMode {
+extension PhotoBrowserNetworkMode {
     
     public func numberOfItems() -> Int {
         return numberOfItemsClosure()

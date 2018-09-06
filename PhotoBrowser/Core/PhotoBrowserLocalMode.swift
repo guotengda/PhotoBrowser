@@ -30,7 +30,7 @@ extension PhotoBrowserLocalMode: PhotoBrowserMode {
         return numberOfItemsClosure()
     }
     
-    public func configure(cell: PhotoBrowserCell, at index: Int) {
+    public func reuse(cell: PhotoBrowserCell, at index: Int) {
         cell.imageView.contentMode = .scaleAspectFill
         cell.imageView.image = imageAtIndexClosure(index)
     }

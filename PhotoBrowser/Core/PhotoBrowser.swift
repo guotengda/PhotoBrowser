@@ -326,9 +326,7 @@ extension PhotoBrowser: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(PhotoBrowserCell.self, for: indexPath)
         cell.cellDelegate = self
-        cell.imageMaximumZoomScale = mode.imageMaximumZoomScale
-        cell.imageZoomScaleForDoubleTap = mode.imageZoomScaleForDoubleTap
-        mode.configure(cell: cell, at: indexPath.item)
+        mode.reuse(cell: cell, at: indexPath.item)
         return cell
     }
     
