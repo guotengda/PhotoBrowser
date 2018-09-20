@@ -12,6 +12,12 @@ Pod::Spec.new do |s|
   s.subspec 'Core' do |cs|
     cs.source_files = 'PhotoBrowser/Core/*.swift'
   end
+  
+  s.subspec 'Kingfisher' do |ks|
+      ks.source_files = 'PhotoBrowser/Kingfisher/*.swift'
+      ks.dependency 'JXPhotoBrowser/Core'
+      ks.dependency 'Kingfisher', '4.7.0'
+  end
 
   s.subspec 'KingfisherWebP' do |ks|
     ks.source_files = 'PhotoBrowser/KingfisherWebP/*.swift'
